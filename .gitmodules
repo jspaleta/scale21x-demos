@@ -1,0 +1,3 @@
+[submodule "starwars-docker"]
+	path = starwars-docker
+	url = https://github.com/jspaleta/starwars-docker

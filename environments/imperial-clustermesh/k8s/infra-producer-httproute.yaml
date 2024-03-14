@@ -1,0 +1,41 @@
+apiVersion: gateway.networking.k8s.io/v1beta1
+kind: HTTPRoute
+metadata:
+  name: lrequest-router
+  namespace: infra
+spec:
+  # Producer Route
+  # parentRef service is same namespace as HTTPRoute
+  # Impacts all workloads into HTTPRoute's namespace 
+  #   impacts all routes to lrequest-v1 in infra ns 
+  #   from services in any other namespace 
+  parentRefs:
+  # Here we are referencing a service insted of a gateway
+  # The service-mesh implementation will parse  
+    - name: lrequest-v1
+      kind: Service
+      namespace: infra  
+      group: core
+      port: 80
+  rules:
+    - matches:
+      - headers:
+        - name: "x-request-id"
+          value: "alternative"
+      backendRefs:
+        - name: "lrequest-v2"
+          port: 80
+    - matches:
+      - headers:
+        - name: "x-request-id"
+          value: "weighted"
+      backendRefs:
+        - name: "lrequest-v2"
+          port: 80
+          weight: 50  
+        - name: "lrequest-v1"
+          port: 80
+          weight: 50  
+    - backendRefs:
+      - name: "lrequest-v1"
+        port: 80

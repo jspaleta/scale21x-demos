@@ -1,0 +1,309 @@
+#---
+#apiVersion: v1
+#kind: Namespace
+#metadata:
+#  name: backend
+#  labels:
+#    kuma.io/sidecar-injection: enabled
+#    linkerd.io/inject: enabled
+#---
+#apiVersion: v1
+#kind: Namespace
+#metadata:
+#  name: frontend
+#  labels:
+#    kuma.io/sidecar-injection: enabled
+#    linkerd.io/inject: enabled
+#---
+#apiVersion: v1
+#kind: Namespace
+#metadata:
+#  name: infra 
+#  labels:
+#    kuma.io/sidecar-injection: enabled
+#    linkerd.io/inject: enabled
+#---
+#apiVersion: v1
+#kind: Namespace
+#metadata:
+#  name: deathstar
+#  labels:
+#    kuma.io/sidecar-injection: enabled
+#    linkerd.io/inject: enabled
+#---
+#apiVersion: v1
+#kind: Namespace
+#metadata:
+#  name: eye-of-palpatine
+#  labels:
+#    kuma.io/sidecar-injection: enabled
+#    linkerd.io/inject: enabled
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: omegafrost
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: golan-iii
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: bounty-hunters
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: imperial-starships
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: rebel-scum
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: deathstar
+  namespace: deathstar  
+  labels:
+    app.kubernetes.io/name: deathstar
+spec:
+  type: LoadBalancer
+  ports:
+  - port: 80
+  selector:
+    org: empire
+    class: deathstar
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: deathstar
+  namespace: deathstar  
+  labels:
+    app.kubernetes.io/name: deathstar
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      org: empire
+      class: deathstar
+  template:
+    metadata:
+      labels:
+        org: empire
+        class: deathstar
+        app.kubernetes.io/name: deathstar
+    spec:
+      containers:
+      - name: starwars
+        image: local/starwars:0.1
+        env:
+        - name: LANDING_RESPONSE_MSG
+          value: "Death Star Landing Request: Ship Landed!\n"
+        - name: LANDING_REQUEST_URL
+          value: "http://lrequest-v1.infra/v1/request-landing"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: deathstar
+  namespace: deathstar  
+  labels:
+    app.kubernetes.io/name: deathstar
+spec:
+  type: LoadBalancer
+  ports:
+  - port: 80
+  selector:
+    org: empire
+    class: deathstar
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: deathstar
+  namespace: deathstar  
+  labels:
+    app.kubernetes.io/name: deathstar
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      org: empire
+      class: deathstar
+  template:
+    metadata:
+      labels:
+        org: empire
+        class: deathstar
+        app.kubernetes.io/name: deathstar
+    spec:
+      containers:
+      - name: starwars
+        image: local/starwars:0.1
+        env:
+        - name: LANDING_RESPONSE_MSG
+          value: "Death Star Landing Request: Ship Landed!\n"
+        - name: LANDING_REQUEST_URL
+          value: "http://lrequest-v1.infra/v1/request-landing"
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: tiefighter
+  namespace: imperial-starships
+  labels:
+    org: empire
+    class: tiefighter
+    app.kubernetes.io/name: tiefighter
+spec:
+  containers:
+  - name: spaceship
+    image: docker.io/cilium/json-mock
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: xwing
+  namespace: rebel-scum  
+  labels:
+    app.kubernetes.io/name: xwing
+    org: alliance
+    class: xwing
+spec:
+  containers:
+  - name: spaceship
+    image: docker.io/cilium/json-mock
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: lrequest-v1
+  namespace: infra  
+  labels:
+    app.kubernetes.io/name: lrequest-v1
+spec:
+  type: ClusterIP
+  ports:
+  - port: 80
+  selector:
+    org: empire
+    class: lrequest-v1
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: lrequest-v1
+  namespace: infra  
+  labels:
+    app.kubernetes.io/name: lrequest-v1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      org: empire
+      class: lrequest-v1
+  template:
+    metadata:
+      labels:
+        org: empire
+        class: lrequest-v1
+        app.kubernetes.io/name: lrequest-v1
+    spec:
+      containers:
+      - name: starwars
+        image: local/starwars:0.1
+        env:
+        - name: LANDING_RESPONSE_MSG
+          value: "Traffic Control Landing Request(v1): Ship Landed!\n"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: lrequest-v2
+  namespace: infra  
+  labels:
+    app.kubernetes.io/name: lrequest-v2
+spec:
+  type: ClusterIP
+  ports:
+  - port: 80
+  selector:
+    org: empire
+    class: lrequest-v2
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: lrequest-v2
+  namespace: infra  
+  labels:
+    app.kubernetes.io/name: lrequest-v2
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      org: empire
+      class: lrequest-v2
+  template:
+    metadata:
+      labels:
+        org: empire
+        class: lrequest-v2
+        app.kubernetes.io/name: lrequest-v2
+    spec:
+      containers:
+      - name: starwars
+        image: local/starwars:0.1
+        env:  
+        - name: LANDING_RESPONSE_MSG
+          value: "Traffic Control Landing Request(v2): Ship Landed!\n"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: eye-of-palpatine
+  namespace: eye-of-palpatine
+  labels:
+    app.kubernetes.io/name: eye-of-palpatine
+spec:
+  type: LoadBalancer
+  ports:
+  - port: 80
+  selector:
+    org: empire
+    class: eye-of-palpatine
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: eye-of-palpatine
+  namespace: eye-of-palpatine 
+  labels:
+    app.kubernetes.io/name: eye-of-palpatine
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      org: empire
+      class: eye-of-palpatine
+  template:
+    metadata:
+      labels:
+        org: empire
+        class: eye-of-palpatine
+        app.kubernetes.io/name: eye-of-palpatine
+    spec:
+      containers:
+      - name: starwars
+        image: local/starwars:0.1
+        env:
+        - name: LANDING_RESPONSE_MSG
+          value: "Eye of Palpatine Landing Request: Ship Landed!\n"
+        - name: LANDING_REQUEST_URL
+          value: "http://lrequest-v1.infra/v1/request-landing"

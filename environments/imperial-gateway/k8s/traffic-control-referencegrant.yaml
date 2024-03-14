@@ -1,0 +1,19 @@
+apiVersion: gateway.networking.k8s.io/v1beta1
+kind: ReferenceGrant  
+# Grants access from deathstar httproutes to traffic-control landing request services
+# Control stays with the traffic-control team
+metadata:
+  name: traffic-control-deathstar-landing-request
+  namespace: traffic-control
+spec:
+  from:
+  - group: gateway.networking.k8s.io
+    kind: HTTPRoute
+    namespace: deathstar
+  to:
+  - group: ""
+    kind: Service
+    name: landing-request-v1
+  - group: ""
+    kind: Service
+    name: landing-request-v2

@@ -1,0 +1,34 @@
+---
+# Persona Scope: Cluster operator
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata:
+  name: infra
+  namespace: infra  
+spec:
+  gatewayClassName: cilium  #which of the available gateway classes we'll be using.
+  listeners:
+  - protocol: HTTP # Lets just listen for HTTP 
+    port: 80 # listen on port 80
+    name: web-gw
+    host: infra.empire.galactic.gov 
+    # Can only attach HTTPRoutes from the same namespace
+    allowedRoutes:
+      namespaces:
+        from: Same
+  - protocol: HTTP # Lets just listen for HTTP 
+    port: 80 # listen on port 80
+    name: web-gw
+    host: deathstar.empire.galactic.gov 
+    # Can only attach HTTPRoutes from the deathstar namespace
+    allowedRoutes:
+      namespaces:
+        from: deathstar
+  - protocol: HTTP # Lets just listen for HTTP 
+    port: 80 # listen on port 80
+    name: web-gw
+    host: eop.empire.galactic.gov 
+    # Can only attach HTTPRoutes from the deathstar namespace
+    allowedRoutes:
+      namespaces:
+        from: eye-of-palpatine

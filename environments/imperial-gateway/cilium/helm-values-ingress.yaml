@@ -1,0 +1,32 @@
+kubeProxyReplacement: true
+ingressController:
+  # -- Enable cilium ingress controller
+  # This will automatically set enable-envoy-config as well.
+  enabled: true
+  # -- Set cilium ingress controller to be the default ingress controller
+  # This will let cilium ingress controller route entries without ingress class set
+  default: true
+  loadbalancerMode: dedicated
+gatewayAPI:
+  enabled: true
+operator:
+  replicas: 1
+
+
+#socketLB:
+#  hostNamespaceOnly: true
+
+## Hubble setup
+#hubble:
+#  relay:
+#    # -- Enable Hubble Relay (requires hubble.enabled=true)
+#    enabled: false
+#  ui:
+#    # -- Whether to enable the Hubble UI.
+#    enabled: false
+#    ingress:
+#      enabled: false
+#      className: "cilium"
+#      hosts:
+#        - hubble.svc.kind.local
+

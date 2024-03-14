@@ -1,0 +1,28 @@
+# Basic ingress for istio bookinfo demo application, which can be found in below
+# https://raw.githubusercontent.com/istio/istio/release-1.11/samples/bookinfo/platform/kube/bookinfo.yaml
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: deathstar-ingress
+  namespace: deathstar
+spec:
+  ingressClassName: cilium
+  rules:
+  - http:
+      paths:
+      - backend:
+          service:
+            name: access-denied
+            port:
+              number: 80
+        path: /
+        pathType: Prefix
+  - http:
+      paths:
+      - backend:
+          service:
+            name: deathstar
+            port:
+              number: 80
+        path: /v1/request-landing
+        pathType: Prefix

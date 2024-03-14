@@ -1,0 +1,31 @@
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+# Death star app team constructs this rule
+# without interaction with the cluster operator 
+# who setup the gateway  
+metadata:
+  name: deathstar
+  namespace: deathstar
+spec:
+  parentRefs:
+  - name: deathstar-gateway
+    namespace: deathstar
+  rules:
+  - matches:
+    - path:
+        type: PathPrefix
+        value: /
+    backendRefs:
+    - name: access-denied
+      port: 80
+  - matches:
+    - path:
+        type: PathPrefix
+        value: /v1/request-landing
+      method: POST 
+    backendRefs:
+      # Here we are referencing the deathstar service 
+      # under control of the death star app team  
+    - name: deathstar
+      port: 80

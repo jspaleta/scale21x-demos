@@ -18,14 +18,18 @@ cd $CDIR
 
 docker pull quay.io/cilium/cilium:${CILIUM_VERSION}
 docker pull quay.io/cilium/operator-generic:${CILIUM_VERSION}
+docker pull ghcr.io/kube-vip/kube-vip-cloud-provider:v0.0.9
+docker pull ghcr.io/kube-vip/kube-vip:v0.5.7
 
+kind load docker-image ghcr.io/kube-vip/kube-vip-cloud-provider:v0.0.9 -n imperial-gateway
+kind load docker-image ghcr.io/kube-vip/kube-vip:v0.5.7 -n imperial-gateway
 kind load docker-image local/starwars:0.1 -n imperial-gateway
 kind load docker-image quay.io/cilium/cilium:${CILIUM_VERSION} -n imperial-gateway
 kind load docker-image quay.io/cilium/operator-generic:${CILIUM_VERSION} -n imperial-gateway
 
-kubectl apply -f k8s/kube-vip-rbac.yaml
+kubectl apply -f k8s/kube-vip/kube-vip-rbac.yaml
 kubectl create configmap --namespace kube-system kubevip --from-literal range-global=172.18.200.100-172.18.200.200
-kubectl apply -f k8s/kube-vip-cloud-controller.yaml
+kubectl apply -f k8s/kube-vip/kube-vip-cloud-controller.yaml
 docker run --network host --rm ghcr.io/kube-vip/kube-vip:v0.5.7 manifest daemonset --services --inCluster --arp --interface eth0 | kubectl apply -f -
 
 kubectl apply -f k8s/gateway-api/gateway.networking.k8s.io_gatewayclasses.yaml

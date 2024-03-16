@@ -11,6 +11,8 @@ spec:
   parentRefs:
   - name: deathstar-gateway
     namespace: deathstar
+  #- name: infra
+  #  namespace: infra
   rules:
   - matches:
     - path:

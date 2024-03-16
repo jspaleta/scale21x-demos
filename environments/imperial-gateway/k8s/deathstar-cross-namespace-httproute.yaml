@@ -8,6 +8,8 @@ spec:
   parentRefs:
   - name: deathstar-gateway
     namespace: deathstar
+  #- name: infra
+  #  namespace: infra
   rules:
   - matches:
     - path:
@@ -26,6 +28,5 @@ spec:
     # But who gets to decide if that's allowed?
     #  Answer: ReferenceGrant under the control of the infra team  
     - name: landing-request-v1
-      namespace: infra
+      namespace: traffic-control
       port: 80
-      weight: 50  

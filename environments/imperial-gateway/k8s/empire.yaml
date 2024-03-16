@@ -13,16 +13,20 @@ apiVersion: v1
 kind: Namespace
 metadata:
   name: deathstar
----
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: omega-frost
+  labels:
+    hostname: deathstar.empire.galactic.gov
 ---
 apiVersion: v1
 kind: Namespace
 metadata:
   name: eye-of-palpatine
+  labels:
+    hostname: eop.empire.galactic.gov
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: omega-frost
 ---
 apiVersion: v1
 kind: Namespace
